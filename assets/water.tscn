@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://npd4bxn5dh60"]
+
+[ext_resource type="Material" uid="uid://8wrh8b7egu1b" path="res://material_shaders/water_shader_material.tres" id="1_tjvat"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1djil"]
+material = ExtResource("1_tjvat")
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_fed0d"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
+
+[node name="Water" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.63564, 0, 0, 0, 0.63564, 0, 0, 0, 0.63564, 0, 0, 0)
+mesh = SubResource("PlaneMesh_1djil")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_fed0d")

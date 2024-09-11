@@ -1,0 +1,69 @@
+[gd_scene load_steps=8 format=3 uid="uid://c6mpimu12gl28"]
+
+[ext_resource type="Script" path="res://test/global.gd" id="1_aog51"]
+[ext_resource type="Texture2D" uid="uid://uymoje052bc3" path="res://assets/textures/soil_001.png" id="2_m8ros"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fid43"]
+albedo_texture = ExtResource("2_m8ros")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_y7rib"]
+material = SubResource("StandardMaterial3D_fid43")
+
+[sub_resource type="Shader" id="Shader_ho0ob"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+
+// Varyings
+varying vec3 W_VERTEX;
+global uniform vec3 ground_position;
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest_mipmap;
+
+
+void vertex() {
+// Input:2
+	mat4 n_out2p0 = MODEL_MATRIX;
+
+
+// Input:4
+	vec3 n_out4p0 = VERTEX;
+
+
+// TransformVectorMult:3
+	vec3 n_out3p0 = (n_out2p0 * vec4(n_out4p0, 1.0)).xyz;
+
+
+// VaryingSetter:5
+	W_VERTEX = n_out3p0;
+
+
+}
+
+void fragment() {
+	float dis = distance(W_VERTEX.y, ground_position.y);
+	
+	if (dis < 0.5) {
+		ALBEDO = texture(screen_texture, SCREEN_UV).rgb;	
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_60b02"]
+render_priority = 0
+shader = SubResource("Shader_ho0ob")
+
+[sub_resource type="SphereMesh" id="SphereMesh_dc8u8"]
+material = SubResource("ShaderMaterial_60b02")
+
+[node name="TestingGrounds" type="Node3D"]
+script = ExtResource("1_aog51")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00302756, 0)
+mesh = SubResource("PlaneMesh_y7rib")
+
+[node name="Sphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0554572, -0.162555, 0)
+mesh = SubResource("SphereMesh_dc8u8")
+skeleton = NodePath("../Ground")

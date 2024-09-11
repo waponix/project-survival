@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3 uid="uid://dy8dvpsm0i2co"]
+
+[ext_resource type="PackedScene" uid="uid://cx5h4qfnkgpww" path="res://assets/folliage/clove_001.glb" id="1_84q21"]
+[ext_resource type="Script" path="res://scripts/clove_001.gd" id="2_ah72c"]
+[ext_resource type="ArrayMesh" uid="uid://cm72fnbjcasbm" path="res://assets/folliage/clove_001.tres" id="2_wux0j"]
+
+[node name="clove_001" instance=ExtResource("1_84q21")]
+script = ExtResource("2_ah72c")
+
+[node name="Plane_033" parent="." index="0"]
+mesh = ExtResource("2_wux0j")

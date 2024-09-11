@@ -1,0 +1,6 @@
+[gd_resource type="PlaneMesh" load_steps=2 format=3 uid="uid://be2v0s3ynv6pc"]
+
+[ext_resource type="Material" uid="uid://8wrh8b7egu1b" path="res://material_shaders/water_shader_material.tres" id="1_l210b"]
+
+[resource]
+material = ExtResource("1_l210b")

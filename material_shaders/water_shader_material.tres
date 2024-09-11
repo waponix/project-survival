@@ -1,0 +1,18 @@
+[gd_resource type="ShaderMaterial" load_steps=4 format=3 uid="uid://8wrh8b7egu1b"]
+
+[ext_resource type="Shader" uid="uid://f4gcd2xintom" path="res://material_shaders/water.tres" id="1_hh07f"]
+[ext_resource type="Texture2D" uid="uid://broy1ng2tm31x" path="res://assets/textures/water_ripple_001_blurred.png" id="2_xqcc0"]
+[ext_resource type="Texture2D" uid="uid://c0adl2fb5qgan" path="res://assets/textures/water_ripple_001_sblurred_n.png" id="3_g1cb1"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_hh07f")
+shader_parameter/RippleScale = 30.0
+shader_parameter/WaterColor = Color(0.172268, 0.282644, 0.196772, 1)
+shader_parameter/RippleColor = Color(0.235608, 0.414562, 0.371984, 1)
+shader_parameter/RippleSpeed = 0.025
+shader_parameter/DeepWaterColor = Color(0.501241, 0.279471, 0.273935, 1)
+shader_parameter/WaterRimColor = Color(0.209897, 0.36954, 0.39965, 1)
+shader_parameter/Refraction = 0.0300008
+shader_parameter/NoiseTexture = ExtResource("2_xqcc0")
+shader_parameter/Normal = ExtResource("3_g1cb1")

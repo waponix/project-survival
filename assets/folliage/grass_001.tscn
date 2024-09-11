@@ -1,0 +1,11 @@
+[gd_scene load_steps=4 format=3 uid="uid://0coiftim8c8u"]
+
+[ext_resource type="PackedScene" uid="uid://dl1auq86nlumo" path="res://assets/folliage/grass_001.glb" id="1_pxd1r"]
+[ext_resource type="Script" path="res://scripts/grass_001.gd" id="2_qabb2"]
+[ext_resource type="ArrayMesh" uid="uid://bx1w6p4saowpe" path="res://assets/folliage/grass_001.tres" id="4_vjgwy"]
+
+[node name="grass_001" instance=ExtResource("1_pxd1r")]
+script = ExtResource("2_qabb2")
+
+[node name="Plane_003" parent="." index="0"]
+mesh = ExtResource("4_vjgwy")

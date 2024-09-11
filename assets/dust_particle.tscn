@@ -1,0 +1,137 @@
+[gd_scene load_steps=13 format=3 uid="uid://bd8l2s004yip"]
+
+[ext_resource type="Texture2D" uid="uid://s6h6p1s672sh" path="res://assets/textures/dust_particle.png" id="2_y4f6t"]
+
+[sub_resource type="Curve" id="Curve_x7ux7"]
+min_value = -29.33
+max_value = 151.24
+_data = [Vector2(0.0320513, 147.253), 0.0, 0.0, 0, 0, Vector2(0.525641, 28.5714), 50.7936, 50.7936, 0, 0, Vector2(1, -37.3626), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_33p8i"]
+curve = SubResource("Curve_x7ux7")
+
+[sub_resource type="Curve" id="Curve_6glhl"]
+max_value = 3.0
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.487179, 1.38462), 0.0, 0.0, 0, 0, Vector2(1, 1.45055), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_jb8bo"]
+curve = SubResource("Curve_6glhl")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v6iso"]
+lifetime_randomness = 0.49
+particle_flag_disable_z = true
+emission_shape_offset = Vector3(0, 5, 0)
+emission_shape_scale = Vector3(2, 2, 2)
+emission_shape = 3
+emission_box_extents = Vector3(5, 1, 1)
+angle_min = -720.0
+angle_max = 720.0
+inherit_velocity_ratio = 0.087
+spread = 29.347
+gravity = Vector3(-1, -2, 0)
+linear_accel_curve = SubResource("CurveTexture_33p8i")
+scale_min = 0.05
+scale_max = 0.1
+scale_over_velocity_curve = SubResource("CurveTexture_jb8bo")
+turbulence_enabled = true
+turbulence_noise_strength = 0.05
+turbulence_noise_scale = 1.347
+turbulence_noise_speed = Vector3(2, 2, 1)
+turbulence_noise_speed_random = 0.1
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_5qulx"]
+parameter_name = "Texture2DParameter"
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_2c8mi"]
+source = 5
+texture = ExtResource("2_y4f6t")
+
+[sub_resource type="VisualShaderNodeBillboard" id="VisualShaderNodeBillboard_8l0wu"]
+billboard_type = 3
+keep_scale = true
+
+[sub_resource type="VisualShader" id="VisualShader_ksnr6"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx, unshaded;
+
+uniform sampler2D Texture2DParameter;
+
+
+
+void vertex() {
+	mat4 n_out2p0;
+// GetBillboardMatrix:2
+	{
+		mat4 __wm = mat4(normalize(INV_VIEW_MATRIX[0]), normalize(INV_VIEW_MATRIX[1]), normalize(INV_VIEW_MATRIX[2]), MODEL_MATRIX[3]);
+		__wm = __wm * mat4(vec4(cos(INSTANCE_CUSTOM.x), -sin(INSTANCE_CUSTOM.x), 0.0, 0.0), vec4(sin(INSTANCE_CUSTOM.x), cos(INSTANCE_CUSTOM.x), 0.0, 0.0), vec4(0.0, 0.0, 1.0, 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+		__wm = __wm * mat4(vec4(length(MODEL_MATRIX[0].xyz), 0.0, 0.0, 0.0), vec4(0.0, length(MODEL_MATRIX[1].xyz), 0.0, 0.0), vec4(0.0, 0.0, length(MODEL_MATRIX[2].xyz), 0.0), vec4(0.0, 0.0, 0.0, 1.0));
+		n_out2p0 = VIEW_MATRIX * __wm;
+	}
+
+
+// Output:0
+	MODELVIEW_MATRIX = n_out2p0;
+
+
+}
+
+void fragment() {
+	vec4 n_out3p0;
+// Texture2D:3
+	n_out3p0 = texture(Texture2DParameter, UV);
+
+
+// Output:0
+	ALBEDO = vec3(n_out3p0.xyz);
+	ALPHA = n_out3p0.x;
+
+
+}
+"
+graph_offset = Vector2(-399.315, -96.5087)
+flags/unshaded = true
+nodes/vertex/2/node = SubResource("VisualShaderNodeBillboard_8l0wu")
+nodes/vertex/2/position = Vector2(-40, 200)
+nodes/vertex/connections = PackedInt32Array(2, 0, 0, 10)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_5qulx")
+nodes/fragment/2/position = Vector2(-300, 80)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_2c8mi")
+nodes/fragment/3/position = Vector2(80, 100)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 2, 3, 0, 0, 0, 3, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i65h6"]
+render_priority = 0
+shader = SubResource("VisualShader_ksnr6")
+shader_parameter/Texture2DParameter = ExtResource("2_y4f6t")
+
+[sub_resource type="QuadMesh" id="QuadMesh_v2oxu"]
+material = SubResource("ShaderMaterial_i65h6")
+
+[node name="DustParticle" type="Node3D"]
+
+[node name="SubViewport" type="SubViewport" parent="."]
+process_mode = 1
+process_priority = 1
+own_world_3d = true
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+vrs_mode = 1
+size = Vector2i(2048, 2048)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="SubViewport"]
+amount = 5000
+lifetime = 78.32
+speed_scale = 1.59
+randomness = 0.12
+fixed_fps = 60
+process_material = SubResource("ParticleProcessMaterial_v6iso")
+draw_pass_1 = SubResource("QuadMesh_v2oxu")
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.34453)
